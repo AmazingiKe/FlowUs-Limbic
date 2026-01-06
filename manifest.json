@@ -1,0 +1,10 @@
+{
+  "id": "flowus-limbic",
+  "name": "FlowUs Limbic",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "实现Obsidian与FlowUs数据库的双向实时同步，支持TODO功能",
+  "author": "Amazing Ike",
+  "authorUrl": "https://amazingike-flowus-libs.com",
+  "isDesktopOnly": false
+}

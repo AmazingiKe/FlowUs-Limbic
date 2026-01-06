@@ -1,0 +1,28 @@
+# 1. 排除node_modules
+node_modules/
+
+# 2. 排除所有 npm 缓存和日志
+npm-debug.log
+.npm/
+.eslintcache
+
+# 3. 排除一些log
+logs/
+_gsdata_/
+
+# 4. 排除环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 5. 排除python依赖项
+.venv/
+
+# 6. 忽略测试文件
+tests/
+
+# 7. 忽略python文件和文件夹
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

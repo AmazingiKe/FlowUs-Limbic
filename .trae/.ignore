@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+.venv/
+venv/
+.env
+.env.*
+*.pyc
+
+# Node / Frontend
+node_modules/
+dist/
+build/
+.cache/
+.vite/
+
+# Logs & runtime
+*.log
+logs/
+coverage/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 数据 / 生成物
+*.lock
+*.sqlite
+*.db
+*.tmp

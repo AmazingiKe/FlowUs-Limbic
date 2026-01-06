@@ -1,0 +1,32 @@
+{
+  "name": "flowus-limbic",
+  "version": "1.0.0",
+  "description": "实现Obsidian与FlowUs数据库的双向实时同步，支持TODO功能",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production",
+    "version": "node version-bump.mjs"
+  },
+  "keywords": [
+    "obsidian",
+    "flowus",
+    "todo",
+    "sync"
+  ],
+  "author": "Amazing Ike",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "esbuild": "^0.27.2",
+    "eslint": "^8.1.0",
+    "obsidian": "^1.11.0",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "axios": "^1.6.2"
+  }
+}
