@@ -1,3 +1,15 @@
-import FlowUsLimbicPlugin from './plugin';
+import { Plugin, App, PluginManifest } from 'obsidian';
 
-export default FlowUsLimbicPlugin;
+export default class FlowUsLimbicPlugin extends Plugin {
+    constructor(app: App, manifest: PluginManifest) {
+        super(app, manifest);
+    }
+
+    async onload() {
+        console.log('FlowUs Limbic plugin loaded');
+    }
+
+    onunload() {
+        console.log('FlowUs Limbic plugin unloaded');
+    }
+}

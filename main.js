@@ -4,75 +4,61 @@ if you want to view the source, please visit the github repository of this plugi
 */
 
 "use strict";
-var FlowUsLimbicPlugin = (() => {
-  var __defProp = Object.defineProperty;
-  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-  var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-  }) : x)(function(x) {
-    if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw Error('Dynamic require of "' + x + '" is not supported');
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
   });
-  var __export = (target, all) => {
-    for (var name in all)
-      __defProp(target, name, { get: all[name], enumerable: true });
-  };
-  var __copyProps = (to, from, except, desc) => {
-    if (from && typeof from === "object" || typeof from === "function") {
-      for (let key of __getOwnPropNames(from))
-        if (!__hasOwnProp.call(to, key) && key !== except)
-          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-    }
-    return to;
-  };
-  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-  var __async = (__this, __arguments, generator) => {
-    return new Promise((resolve, reject) => {
-      var fulfilled = (value) => {
-        try {
-          step(generator.next(value));
-        } catch (e) {
-          reject(e);
-        }
-      };
-      var rejected = (value) => {
-        try {
-          step(generator.throw(value));
-        } catch (e) {
-          reject(e);
-        }
-      };
-      var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
-      step((generator = generator.apply(__this, __arguments)).next());
+};
+
+// src/main.ts
+var main_exports = {};
+__export(main_exports, {
+  default: () => FlowUsLimbicPlugin
+});
+module.exports = __toCommonJS(main_exports);
+var import_obsidian = require("obsidian");
+var FlowUsLimbicPlugin = class extends import_obsidian.Plugin {
+  constructor(app, manifest) {
+    super(app, manifest);
+  }
+  onload() {
+    return __async(this, null, function* () {
+      console.log("FlowUs Limbic plugin loaded");
     });
-  };
-
-  // src/main.ts
-  var main_exports = {};
-  __export(main_exports, {
-    default: () => main_default
-  });
-
-  // src/plugin.ts
-  var import_obsidian = __require("obsidian");
-  var FlowUsLimbicPlugin = class extends import_obsidian.Plugin {
-    constructor(app, manifest) {
-      super(app, manifest);
-    }
-    onload() {
-      return __async(this, null, function* () {
-        console.log("FlowUs Limbic plugin loaded");
-      });
-    }
-    onunload() {
-      console.log("FlowUs Limbic plugin unloaded");
-    }
-  };
-  var plugin_default = FlowUsLimbicPlugin;
-
-  // src/main.ts
-  var main_default = plugin_default;
-  return __toCommonJS(main_exports);
-})();
+  }
+  onunload() {
+    console.log("FlowUs Limbic plugin unloaded");
+  }
+};
