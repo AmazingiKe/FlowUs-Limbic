@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FlowUsLimbicSettings } from '../main';
+import type { FlowUsLimbicSettings } from '../settings';
 
 export class FlowUsOAuth {
   private settings: FlowUsLimbicSettings;
@@ -83,7 +83,9 @@ export class FlowUsOAuth {
    * 检查令牌是否过期
    */
   isTokenExpired(): boolean {
-    return Date.now() >= this.settings.tokenExpiry;
+    const expiry = this.settings.tokenExpiry;
+    if (!expiry) return true;
+    return Date.now() >= expiry;
   }
 
   /**

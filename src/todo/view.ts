@@ -6,8 +6,8 @@ export const VIEW_TYPE_FLOWUS_TODO = 'flowus-todo-view';
 
 export class TodoView extends ItemView {
   private syncManager: TodoSyncManager;
-  private todoListEl: HTMLElement;
-  private inputEl: HTMLInputElement;
+  private todoListEl!: HTMLElement;
+  private inputEl!: HTMLInputElement;
 
   constructor(leaf: WorkspaceLeaf, syncManager: TodoSyncManager) {
     super(leaf);
@@ -23,7 +23,7 @@ export class TodoView extends ItemView {
   }
 
   async onOpen() {
-    const containerEl = this.containerEl.children[1];
+    const containerEl = this.containerEl.children[1] as HTMLElement;
     containerEl.empty();
     
     // 创建标题
@@ -45,7 +45,7 @@ export class TodoView extends ItemView {
     
     // 绑定添加TODO的事件
     addButton.addEventListener('click', () => this.addTodo());
-    this.inputEl.addEventListener('keydown', (evt) => {
+    this.inputEl.addEventListener('keydown', (evt: KeyboardEvent) => {
       if (evt.key === 'Enter') {
         this.addTodo();
       }
@@ -263,7 +263,7 @@ export class TodoView extends ItemView {
       }
     `;
     
-    this.containerEl.appendChild(styleEl);
+    (this.containerEl as HTMLElement).appendChild(styleEl);
   }
 
 

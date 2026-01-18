@@ -1,6 +1,10 @@
-import { Plugin } from (window as any).obsidian || (global as any).obsidian;
+import { Plugin, App, PluginManifest } from 'obsidian';
 
 export class FlowUsLimbicPlugin extends Plugin {
+    constructor(app: App, manifest: PluginManifest) {
+        super(app, manifest);
+    }
+
     async onload() {
         console.log('FlowUs Limbic plugin loaded');
     }
@@ -10,6 +14,4 @@ export class FlowUsLimbicPlugin extends Plugin {
     }
 }
 
-export function createPlugin() {
-    return new FlowUsLimbicPlugin();
-}
+export default FlowUsLimbicPlugin;

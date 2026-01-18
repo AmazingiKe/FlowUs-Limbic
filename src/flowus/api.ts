@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { FlowUsLimbicSettings } from '../main';
+import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from 'axios';
+import type { FlowUsLimbicSettings } from '../settings';
 import { FlowUsOAuth } from './oauth';
 
 // TODO项目接口
@@ -15,7 +15,7 @@ export interface TodoItem {
 export class FlowUsAPI {
   private settings: FlowUsLimbicSettings;
   private oauth: FlowUsOAuth;
-  private client: axios.AxiosInstance;
+  private client: AxiosInstance;
   private readonly BASE_URL = 'https://api.flowus.cn/v1';
 
   constructor(settings: FlowUsLimbicSettings, oauth: FlowUsOAuth) {
@@ -31,7 +31,7 @@ export class FlowUsAPI {
     });
     
     // 添加请求拦截器，自动处理令牌
-    this.client.interceptors.request.use(async (config) => {
+    this.client.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
       // 检查令牌是否过期
       if (this.oauth.isTokenExpired()) {
         try {

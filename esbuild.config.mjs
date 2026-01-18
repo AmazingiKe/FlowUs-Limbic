@@ -1,7 +1,7 @@
 import esbuild from "esbuild";
 import process from "process";
 import fs from "fs";
-import baseConfig from "./build/esbuild.base.mjs";
+import { baseConfig } from "./build/esbuild.base.mjs";
 
 const prod = process.argv[2] === "production";
 

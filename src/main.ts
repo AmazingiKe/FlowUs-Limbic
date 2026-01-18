@@ -1,3 +1,3 @@
-import { createPlugin } from './plugin';
+import FlowUsLimbicPlugin from './plugin';
 
-export default createPlugin();
+export default FlowUsLimbicPlugin;

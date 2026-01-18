@@ -1,6 +1,6 @@
 import { App, Notice } from 'obsidian';
 import { FlowUsAPI, TodoItem } from '../flowus/api';
-import { FlowUsLimbicSettings } from '../main';
+import type { FlowUsLimbicSettings } from '../settings';
 
 export class TodoSyncManager {
   private app: App;
@@ -32,7 +32,7 @@ export class TodoSyncManager {
       clearInterval(this.syncInterval);
     }
     
-    this.syncInterval = window.setInterval(() => {
+    this.syncInterval = (window as any).setInterval(() => {
       this.sync();
     }, this.SYNC_INTERVAL_MS);
   }
