@@ -7,7 +7,21 @@ if you want to view the source, please visit the github repository of this plugi
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
@@ -48,17 +62,97 @@ __export(main_exports, {
   default: () => FlowUsLimbicPlugin
 });
 module.exports = __toCommonJS(main_exports);
+var import_obsidian2 = require("obsidian");
+
+// src/settings-tab.ts
 var import_obsidian = require("obsidian");
-var FlowUsLimbicPlugin = class extends import_obsidian.Plugin {
+var FlowUsLimbicSettingTab = class extends import_obsidian.PluginSettingTab {
+  constructor(app, plugin) {
+    super(app, plugin);
+    this.plugin = plugin;
+  }
+  display() {
+    const { containerEl } = this;
+    containerEl.empty();
+    new import_obsidian.Setting(containerEl).setName("Client ID").setDesc("\u4ECE FlowUs \u5F00\u53D1\u8005\u5E73\u53F0\u83B7\u53D6\u7684 Client ID").addText((text) => text.setPlaceholder("\u8F93\u5165 Client ID").setValue(this.plugin.settings.clientId).onChange((value) => __async(this, null, function* () {
+      this.plugin.settings.clientId = value;
+      yield this.plugin.saveSettings();
+    })));
+    new import_obsidian.Setting(containerEl).setName("Client Secret").setDesc("\u4ECE FlowUs \u5F00\u53D1\u8005\u5E73\u53F0\u83B7\u53D6\u7684 Client Secret").addText((text) => text.setPlaceholder("\u8F93\u5165 Client Secret").setValue(this.plugin.settings.clientSecret).onChange((value) => __async(this, null, function* () {
+      this.plugin.settings.clientSecret = value;
+      yield this.plugin.saveSettings();
+    })));
+    new import_obsidian.Setting(containerEl).setName("Database ID").setDesc("FlowUs \u6570\u636E\u5E93\u7684 ID").addText((text) => text.setPlaceholder("\u8F93\u5165 Database ID").setValue(this.plugin.settings.databaseId).onChange((value) => __async(this, null, function* () {
+      this.plugin.settings.databaseId = value;
+      yield this.plugin.saveSettings();
+    })));
+    new import_obsidian.Setting(containerEl).setName("Table Name").setDesc("\u6570\u636E\u5E93\u8868\u540D").addText((text) => text.setPlaceholder("\u8F93\u5165\u8868\u540D").setValue(this.plugin.settings.tableName).onChange((value) => __async(this, null, function* () {
+      this.plugin.settings.tableName = value;
+      yield this.plugin.saveSettings();
+    })));
+    new import_obsidian.Setting(containerEl).setName("\u6388\u6743\u72B6\u6001").setDesc("\u5F53\u524D\u6388\u6743\u72B6\u6001").addButton((button) => button.setButtonText("\u6388\u6743").onClick(() => {
+      this.handleAuthorize();
+    }));
+  }
+  handleAuthorize() {
+    if (!this.plugin.settings.clientId || !this.plugin.settings.clientSecret) {
+      this.plugin.app.vault.adapter.write(
+        ".flowus-limbic-error.log",
+        "\u9519\u8BEF\uFF1A\u8BF7\u5148\u586B\u5199 Client ID \u548C Client Secret\n"
+      );
+      return;
+    }
+    const authUrl = `https://api.flowus.cn/oauth/authorize?client_id=${this.plugin.settings.clientId}&response_type=code&redirect_uri=obsidian://flowus-limbic-callback&scope=all&state=${Math.random().toString(36).substring(2, 15)}`;
+    window.open(authUrl, "_blank");
+  }
+};
+
+// src/settings.ts
+var DEFAULT_SETTINGS = {
+  clientId: "",
+  clientSecret: "",
+  databaseId: "",
+  tableName: "",
+  accessToken: "",
+  refreshToken: "",
+  tokenExpiry: 0
+};
+
+// src/main.ts
+var FlowUsLimbicPlugin = class extends import_obsidian2.Plugin {
   constructor(app, manifest) {
     super(app, manifest);
+    this.settings = __spreadValues({}, DEFAULT_SETTINGS);
   }
   onload() {
     return __async(this, null, function* () {
       console.log("FlowUs Limbic plugin loaded");
+      yield this.loadSettings();
+      this.addSettingTab(new FlowUsLimbicSettingTab(this.app, this));
     });
   }
   onunload() {
     console.log("FlowUs Limbic plugin unloaded");
+  }
+  loadSettings() {
+    return __async(this, null, function* () {
+      try {
+        const savedSettings = yield this.loadData();
+        if (savedSettings) {
+          this.settings = __spreadValues(__spreadValues({}, DEFAULT_SETTINGS), savedSettings);
+        }
+      } catch (error) {
+        console.error("Failed to load settings:", error);
+      }
+    });
+  }
+  saveSettings() {
+    return __async(this, null, function* () {
+      try {
+        yield this.saveData(this.settings);
+      } catch (error) {
+        console.error("Failed to save settings:", error);
+      }
+    });
   }
 };
