@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "node esbuild.config.mjs production",
-    "version": "node version-bump.mjs"
+    "version": "node version-bump.mjs",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "keywords": [
     "obsidian",

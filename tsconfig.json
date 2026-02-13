@@ -10,7 +10,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@flowus-limbic/shared-types": ["./packages/shared-types/src"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
