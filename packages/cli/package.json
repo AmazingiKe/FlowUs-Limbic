@@ -1,0 +1,15 @@
+{
+  "name": "@flowus-kit/cli",
+  "version": "0.1.0",
+  "description": "FlowUs Kit CLI Tool",
+  "main": "dist/index.js",
+  "bin": {
+    "flowus-kit": "./bin/flowus-kit.js"
+  },
+  "dependencies": {
+    "@flowus-kit/sdk": "0.1.0",
+    "commander": "^11.1.0",
+    "chalk": "^4.1.2",
+    "ora": "^5.4.1"
+  }
+}
