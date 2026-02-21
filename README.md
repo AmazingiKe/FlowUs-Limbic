@@ -4,6 +4,31 @@
 
 `FlowUs Limbic` 是一个基于 Obsidian 插件架构的前端项目，主要功能是提供 **FlowUs** 系列的插件实现。项目使用 **TypeScript** 编写，构建工具为 **esbuild**，并通过 `main.ts` 暴露插件入口。项目结构简洁，核心代码位于 `src/` 目录下。
 
+## 📚 文档
+
+完整的文档位于 [`docs/`](./docs/README.md) 目录：
+
+### 快速开始
+
+- [项目概述](docs/getting-started/overview.md) - 了解 FlowUs Limbic
+- [安装指南](docs/getting-started/installation.md) - 安装插件
+- [快速开始](docs/getting-started/quickstart.md) - 5 分钟上手
+- [FlowUs 配置](docs/getting-started/flowus-setup.md) - 配置 FlowUs
+
+### 功能文档
+
+- [TODO 管理](docs/features/todo-management.md) - 基本功能
+- [同步功能](docs/features/synchronization.md) - 同步机制
+- [高级 TODO 功能](docs/features/advanced-todo.md) - 高级功能
+
+### 其他
+
+- [常见问题](docs/faq.md) - FAQ
+- [故障排除](docs/troubleshooting/common-issues.md) - 解决问题
+- [开发者文档](docs/development/environment-setup.md) - 参与开发
+- [架构文档](docs/architecture/overview.md) - 系统架构
+- [变更日志](docs/releases/changelog.md) - 版本历史
+
 ## 功能特性
 
 - **双向同步**：实现 Obsidian 与 FlowUs 数据库的双向实时同步
@@ -140,104 +165,21 @@
 
 ## 开发指南
 
-### 项目结构
-
-```
-FlowUs-Limbic/
-├── src/
-│   ├── main.ts              # 插件入口
-│   ├── settings.ts          # 配置接口定义
-│   ├── flowus/
-│   │   ├── api.ts          # FlowUs API 客户端
-│   │   └── oauth.ts        # OAuth 认证模块
-│   └── todo/
-│       ├── view.ts         # TODO 视图组件
-│       └── sync.ts         # TODO 同步管理器
-├── build/
-│   └── esbuild.base.mjs   # esbuild 基础配置
-├── esbuild.config.mjs      # esbuild 构建配置
-├── package.json            # 项目依赖
-├── tsconfig.json          # TypeScript 配置
-├── manifest.json          # Obsidian 插件清单
-└── main.js               # 构建输出（自动生成）
-```
-
-### 开发命令
-
-```bash
-# 安装依赖
-npm install
-
-# 开发模式（监听文件变化）
-npm run dev
-
-# 生产构建
-npm run build
-
-# 类型检查
-npx tsc --noEmit
-```
-
-### 添加新功能
-
-1. 在 `src/flowus/` 或 `src/todo/` 中添加新模块
-2. 在 `src/main.ts` 中导入并使用新模块
-3. 运行 `npm run build` 构建项目
-4. 在 Obsidian 中测试新功能
+详细的开发指南请参见：
+- [开发环境搭建](docs/development/environment-setup.md) - 搭建开发环境
+- [构建系统](docs/development/build-system.md) - 了解构建配置
+- [测试指南](docs/development/testing-guidelines.md) - 学习如何测试
+- [Schema 开发指南](docs/development/schema-development.md) - 扩展数据类型
 
 ## 常见问题
 
-### Q: 插件无法加载？
+详细的 FAQ 请参见 [docs/faq.md](docs/faq.md)。
 
-**A:** 请检查以下几点：
+## 架构设计
 
-1. 确认 `main.js` 和 `manifest.json` 已正确放置在插件目录
-2. 检查 Obsidian 版本是否满足 `minAppVersion` 要求
-3. 查看 Obsidian 控制台是否有错误信息
-
-### Q: 授权失败？
-
-**A:** 请确认：
-
-1. Client ID 和 Client Secret 是否正确
-2. 重定向 URI 是否设置为 `obsidian://flowus-limbic-callback`
-3. 网络连接是否正常
-
-### Q: 同步失败？
-
-**A:** 可能的原因：
-
-1. 访问令牌已过期，尝试重新授权
-2. Database ID 或 Table Name 配置错误
-3. FlowUs API 服务暂时不可用
-
-### Q: TODO 不同步？
-
-**A:** 请检查：
-
-1. 确认已完成授权流程
-2. 检查数据库字段是否包含 `title` 和 `completed`
-3. 查看控制台日志获取详细错误信息
-
-## 可优化与解耦的方向
-
-| 方向               | 说明                                                                                                     | 预期收益                                       |
-| ------------------ | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| **模块化业务逻辑** | 将 `src/flowus` 中的功能拆分为独立的子模块（如 `ui/`, `service/`, `store/`），并使用统一的接口进行交互。 | 提高代码可维护性，便于单元测试和复用。         |
-| **插件入口抽象化** | 将插件的导出逻辑抽离到单独的 `src/plugin.ts`，使用工厂模式创建插件实例。                                 | 降低 `main.ts` 的耦合度，使入口文件更简洁。    |
-| **配置文件分离**   | 将 `esbuild` 的公共配置抽离为 `build/` 目录下的共享配置文件，使用 `extend` 合并项目特有配置。            | 便于在多个插件项目之间共享构建配置，减少重复。 |
-| **依赖注入 (DI)**  | 引入轻量级 DI 容器（如 `tsyringe`），在插件内部通过构造函数注入服务。                                    | 解耦业务实现与具体实现细节，提升可测试性。     |
-| **日志统一管理**   | 使用统一的日志库（如 `loglevel`），在插件生命周期统一记录日志级别。                                      | 统一日志格式，便于调试和错误追踪。             |
-| **类型声明分离**   | 将公共类型声明放在 `src/types/`，并在业务模块中引用。                                                    | 防止类型重复定义，提升 IDE 智能提示。          |
-| **单元测试引入**   | 使用 `vitest` 或 `jest` 为 `src/flowus` 中的核心函数编写测试。                                           | 提升代码可靠性，防止回归。                     |
-
-## 下一步建议
-
-1. **创建模块目录**：在 `src/flowus` 下创建 `ui/`, `service/`, `store/` 子目录，并将现有业务代码迁移至对应模块。
-2. **实现插件工厂**：新建 `src/plugin.ts`，使用工厂函数返回插件实例，`main.ts` 只负责导入并导出该实例。
-3. **抽离构建配置**：在项目根目录新增 `build/`，把 `esbuild.config.mjs` 中的公共部分抽离为 `build/esbuild.base.mjs`，主配置通过 `import` 合并。
-4. **引入 DI 容器**：在 `src/service/` 中使用 `tsyringe` 注入依赖，更新插件初始化逻辑。
-5. **添加测试**：配置 `vitest`，为关键业务函数编写单元测试并在 CI 中运行。
+- [架构概览](docs/architecture/overview.md) - 系统整体架构
+- [通用同步层](docs/architecture/universal-sync.md) - 通用同步层设计
+- [FlowUs 适配器](docs/architecture/flowus-adapter.md) - FlowUs API 适配层
 
 ## 许可证
 
