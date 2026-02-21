@@ -27,6 +27,8 @@ __pycache__/
 *.pyo
 *.pyd
 
+/.trae
+
 # ReCode local database
 .recode
 CLAUDE.md

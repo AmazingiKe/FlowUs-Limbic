@@ -1,0 +1,10 @@
+{
+  "name": "@flowus-kit/sdk",
+  "version": "0.1.0",
+  "description": "FlowUs Kit Core SDK",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "axios": "^1.6.2"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@flowus-limbic/shared-types",
+  "version": "1.0.0",
+  "description": "共享类型定义 - FlowUs Limbic 通用数据同步",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "keywords": [
+    "flowus",
+    "types",
+    "sync"
+  ],
+  "author": "Amazing Ike",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
