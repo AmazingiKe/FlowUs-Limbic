@@ -26,3 +26,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# ReCode local database
+.recode
+CLAUDE.md
