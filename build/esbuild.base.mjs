@@ -12,4 +12,5 @@ export const baseConfig = {
     define: {
         'process.env.NODE_ENV': '"production"',
     },
+    platform: 'node',
 };

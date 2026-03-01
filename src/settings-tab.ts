@@ -1,13 +1,19 @@
 import { App, PluginSettingTab, Setting, Notice } from 'obsidian';
 import type { FlowUsLimbicSettings } from './settings';
 import { DEFAULT_SETTINGS } from './settings';
+import type { FlowUsOAuthManager } from './flowus/auth-manager';
 
 export class FlowUsLimbicSettingTab extends PluginSettingTab {
     private plugin: any;
+    private authManager: FlowUsOAuthManager | null = null;
 
     constructor(app: App, plugin: any) {
         super(app, plugin);
         this.plugin = plugin;
+    }
+
+    setAuthManager(authManager: FlowUsOAuthManager): void {
+        this.authManager = authManager;
     }
 
     display(): void {
@@ -25,6 +31,7 @@ export class FlowUsLimbicSettingTab extends PluginSettingTab {
                 .onChange(async (value: string) => {
                     this.plugin.settings.clientId = value;
                     await this.plugin.saveSettings();
+                    this.authManager?.updateSettings(this.plugin.settings);
                 }));
 
         new Setting(containerEl)
@@ -36,6 +43,7 @@ export class FlowUsLimbicSettingTab extends PluginSettingTab {
                 .onChange(async (value: string) => {
                     this.plugin.settings.clientSecret = value;
                     await this.plugin.saveSettings();
+                    this.authManager?.updateSettings(this.plugin.settings);
                 }));
 
         new Setting(containerEl)
@@ -62,12 +70,20 @@ export class FlowUsLimbicSettingTab extends PluginSettingTab {
 
         containerEl.createEl('h3', { text: '授权' });
 
+        // 回调 URL 提示
+        const callbackHint = containerEl.createEl('div', {
+            cls: 'setting-item-description',
+            text: '请在 FlowUs 开发者平台配置回调 URL: http://localhost:3000/callback'
+        });
+        callbackHint.style.color = 'var(--text-accent)';
+        callbackHint.style.marginBottom = '16px';
+
         const authStatus = containerEl.createEl('div');
         this.updateAuthStatus(authStatus);
 
         new Setting(containerEl)
             .setName('一键授权')
-            .setDesc('点击按钮打开 FlowUs 授权页面')
+            .setDesc('点击按钮打开 FlowUs 授权页面（使用本地服务器回调）')
             .addButton(button => button
                 .setButtonText('🔗 一键授权')
                 .setCta()
@@ -83,10 +99,7 @@ export class FlowUsLimbicSettingTab extends PluginSettingTab {
                     .setButtonText('清除授权')
                     .setWarning()
                     .onClick(async () => {
-                        this.plugin.settings.accessToken = '';
-                        this.plugin.settings.refreshToken = '';
-                        this.plugin.settings.tokenExpiry = 0;
-                        await this.plugin.saveSettings();
+                        await this.authManager?.clearAuthorization();
                         this.updateAuthStatus(authStatus);
                         new Notice('授权已清除');
                         this.display();
@@ -103,6 +116,16 @@ export class FlowUsLimbicSettingTab extends PluginSettingTab {
             });
             status.style.color = 'var(--color-green)';
             status.style.marginBottom = '16px';
+
+            // 显示令牌过期时间
+            if (this.plugin.settings.tokenExpiry) {
+                const expiry = new Date(this.plugin.settings.tokenExpiry);
+                const expiryInfo = element.createEl('div', {
+                    cls: 'setting-item-description',
+                    text: `令牌过期时间: ${expiry.toLocaleString('zh-CN')}`
+                });
+                expiryInfo.style.marginBottom = '16px';
+            }
         } else {
             const status = element.createEl('div', {
                 cls: 'flowus-auth-status warning',
@@ -113,24 +136,15 @@ export class FlowUsLimbicSettingTab extends PluginSettingTab {
         }
     }
 
-    private handleAuthorize(): void {
-        if (!this.plugin.settings.clientId || !this.plugin.settings.clientSecret) {
-            new Notice('请先填写 Client ID 和 Client Secret');
+    private async handleAuthorize(): Promise<void> {
+        if (!this.authManager) {
+            new Notice('Auth manager not initialized');
             return;
         }
 
-        const state = Math.random().toString(36).substring(2, 15);
-        const params = new URLSearchParams({
-            client_id: this.plugin.settings.clientId,
-            response_type: 'code',
-            redirect_uri: 'obsidian://flowus-limbic-callback',
-            scope: 'all',
-            state: state
-        });
+        await this.authManager.startAuthorization();
 
-        const authUrl = `https://api.flowus.cn/oauth/authorize?${params.toString()}`;
-        window.open(authUrl, '_blank');
-
-        new Notice('已打开授权页面，请在浏览器中完成授权');
+        // 更新显示
+        this.display();
     }
 }
