@@ -1,5 +1,5 @@
-import { FlowUsClient } from '../api/client';
-import { StorageAdapter, TodoItem } from '../types';
+import { FlowUsClient } from './client';
+import { StorageAdapter, TodoItem } from './types';
 
 /**
  * @class IncrementalSyncer

@@ -4,7 +4,15 @@
   "description": "FlowUs Kit Core SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node build.js",
+    "watch": "node build.js --watch"
+  },
   "dependencies": {
     "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.2",
+    "typescript": "^5.9.3"
   }
 }

@@ -4,7 +4,14 @@
       "Bash(chmod:*)",
       "Bash(npm install)",
       "Bash(node:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "WebSearch",
+      "Bash(cd D:\\\\AmazingiKeCodeHub\\\\FlowUs-Limbic\\\\packages\\\\cli:*)",
+      "Bash(cd D:\\\\AmazingiKeCodeHub\\\\FlowUs-Limbic:*)",
+      "Bash(cd D:\\\\AmazingiKeCodeHub\\\\FlowUs-Limbic\\\\packages\\\\shared-types:*)",
+      "Bash(cd D:\\\\AmazingiKeCodeHub\\\\FlowUs-Limbic\\\\packages\\\\sdk:*)",
+      "Bash(git add:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }

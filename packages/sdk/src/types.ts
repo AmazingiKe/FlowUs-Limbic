@@ -5,6 +5,7 @@
 export interface StorageAdapter {
   getItem(key: string): Promise<string | null>;
   setItem(key: string, value: string): Promise<void>;
+  removeItem(key: string): Promise<void>;
 }
 
 /**
@@ -38,4 +39,25 @@ export interface TodoItem {
   createdAt: string;
   updatedAt: string;
   [key: string]: any;
+}
+
+/**
+ * @interface Database
+ * @description FlowUs 数据库类型
+ */
+export interface Database {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  cover?: string;
+  createdTime: number;
+  updatedTime: number;
+}
+
+export interface DatabaseListResponse {
+  items: Database[];
+  total: number;
+  page: number;
+  pageSize: number;
 }

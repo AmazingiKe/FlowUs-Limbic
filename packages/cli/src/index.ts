@@ -4,6 +4,9 @@ import ora from 'ora';
 import { Authenticator } from '../../sdk/src/auth';
 import { FlowUsClient } from '../../sdk/src/client';
 import { FileStorageAdapter } from '../../sdk/src/adapter';
+import { OneClickAuth } from './one-click-auth';
+import { ConfigCommand } from './config-command';
+import { DatabaseSelector } from './database-selector';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -29,45 +32,62 @@ program
   .description(chalk.cyan('FlowUs Kit Tools - 命令行同步工具'))
   .version('0.1.0');
 
+// 配置管理命令
+const configCommand = new ConfigCommand();
+configCommand.addCommand(program);
+
+// 一键授权命令
 program.command('login')
-  .description('执行 FlowUs OAuth 授权并保存 Token')
-  .action(async () => {
-    const auth = new Authenticator({
-      clientId: await adapter.getItem('clientId') || '',
-      clientSecret: await adapter.getItem('clientSecret') || '',
-      redirectUri: 'http://localhost:3000/callback'
-    }, adapter);
-
-    const authUrl = auth.getAuthorizationUrl();
-    console.log(chalk.yellow('1. 请在浏览器中打开以下链接进行授权：'));
-    console.log(chalk.blue.underline(authUrl));
-
-    console.log(chalk.yellow('\n2. 授权完成后，浏览器会重定向到一个包含 code 参数的 URL。'));
-
-    const readline = require('readline').createInterface({
-      input: process.stdin,
-      output: process.stdout
-    });
-
-    readline.question(chalk.cyan('请输入 URL 中的 code: '), async (code: string) => {
-      readline.close();
-      if (!code) {
-        console.error(chalk.red('错误: code 不能为空'));
-        process.exit(1);
-      }
-
-      await withLoader('正在换取并保存 Token...', async () => {
-        await auth.exchangeCode(code);
-      });
-
-      console.log(chalk.green('✔ 身份验证成功，Token 已保存！'));
+  .description('执行 FlowUs OAuth 授权并保存 Token，支持一键授权')
+  .option('--no-db', 'Skip database selection')
+  .action(async (options: any) => {
+    await withLoader('正在执行一键授权...', async () => {
+      const auth = new OneClickAuth(configDir);
+      await auth.run();
     });
   });
 
+// 数据库选择命令
+program.command('db-select')
+  .description('选择默认数据库')
+  .action(async () => {
+    await withLoader('正在获取数据库列表...', async () => {
+      const auth = new Authenticator({
+        clientId: await adapter.getItem('clientId') || '',
+        clientSecret: await adapter.getItem('clientSecret') || '',
+        redirectUri: 'http://localhost:3000/callback'
+      }, adapter);
+
+      const selector = new DatabaseSelector(auth);
+      const selectedDatabase = await selector.select();
+      if (selectedDatabase) {
+        await adapter.setItem('default_database_id', selectedDatabase.id);
+        console.log(chalk.green(`✓ Default database set to: ${selectedDatabase.title}`));
+      }
+    });
+  });
+
+// 列出数据库
+program.command('db-ls')
+  .description('列出所有数据库')
+  .action(async () => {
+    await withLoader('正在获取数据库列表...', async () => {
+      const auth = new Authenticator({
+        clientId: await adapter.getItem('clientId') || '',
+        clientSecret: await adapter.getItem('clientSecret') || '',
+        redirectUri: 'http://localhost:3000/callback'
+      }, adapter);
+
+      const selector = new DatabaseSelector(auth);
+      await selector.list();
+    });
+  });
+
+// TODO 列表命令
 program.command('todo-ls')
   .description('List todos from a database')
   .requiredOption('-d, --database <id>', 'Database ID')
-  .action(async (options) => {
+  .action(async (options: any) => {
     const auth = new Authenticator({
         clientId: await adapter.getItem('clientId') || '',
         clientSecret: await adapter.getItem('clientSecret') || '',
@@ -83,11 +103,12 @@ program.command('todo-ls')
     }
   });
 
+// 添加 TODO 命令
 program.command('todo-add')
   .description('向 FlowUs 数据库添加新任务')
   .argument('<title>', '任务标题')
   .option('-d, --database <id>', '数据库 ID (可选，默认使用配置)')
-  .action(async (title, options) => {
+  .action(async (title: string, options: any) => {
     await withLoader(`正在添加任务: ${title}...`, async () => {
       const dbId = options.database || await adapter.getItem('default_database_id');
       if (!dbId) {
@@ -121,4 +142,3 @@ program.command('todo-add')
   });
 
 program.parse();
-

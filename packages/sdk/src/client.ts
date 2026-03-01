@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { Authenticator } from './auth';
-import { TodoItem } from './types';
+import { TodoItem, Database } from './types';
 
 /**
  * @class FlowUsClient
@@ -31,6 +31,14 @@ export class FlowUsClient {
       }
       return config;
     });
+  }
+
+  /**
+   * 获取数据库列表
+   */
+  async getDatabases(): Promise<Database[]> {
+    const response = await this.client.get('/databases');
+    return response.data.items;
   }
 
   /**

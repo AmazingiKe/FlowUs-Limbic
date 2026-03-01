@@ -4,6 +4,24 @@
  * @see https://flowus.cn/share/07168d83-cb08-4ab8-ab73-74fe915054b1
  */
 
+// 数据库类型
+export interface Database {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  cover?: string;
+  createdTime: number;
+  updatedTime: number;
+}
+
+export interface DatabaseListResponse {
+  items: Database[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 /**
  * Block 类型枚举
  */

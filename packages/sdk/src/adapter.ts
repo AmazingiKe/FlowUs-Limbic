@@ -34,4 +34,11 @@ export class FileStorageAdapter implements StorageAdapter {
     data[key] = value;
     await fs.writeFile(this.configPath, JSON.stringify(data, null, 2));
   }
+
+  async removeItem(key: string): Promise<void> {
+    await this.ensureFile();
+    const data = JSON.parse(await fs.readFile(this.configPath, 'utf-8'));
+    delete data[key];
+    await fs.writeFile(this.configPath, JSON.stringify(data, null, 2));
+  }
 }
